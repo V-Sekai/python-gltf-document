@@ -337,7 +337,7 @@ class GLTFAssetValidator:
 
                 # Progress indicator
                 successful = sum(1 for r in self.results if r.success)
-                print(f"    Result: {'[OK]' if result.success else '[FAIL]'} "
+                print(f"    Result: {'SUCCESS' if result.success else 'FAILED'} "
                       f"(Total: {len(self.results)}, Success: {successful})")
 
         total_time = time.time() - start_time

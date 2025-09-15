@@ -1,10 +1,12 @@
 """
-Godot GLTF Module - Python Implementation
+ExecuTorch GLTF Module - Python Implementation
 
-A Python module that replicates the functionality of Godot's GLTF module,
-providing GLTF 2.0 file parsing and scene generation capabilities.
+A Python module that provides ExecuTorch-accelerated GLTF 2.0 file parsing,
+scene generation, and export capabilities. Optimized for edge devices and
+on-device AI inference.
 
-Supports both CPU and GPU-accelerated operations via PyTorch integration.
+This module replicates Godot's GLTF functionality with ExecuTorch performance
+optimizations for mobile, embedded, and edge computing environments.
 """
 
 __version__ = "1.0.0"
@@ -20,7 +22,16 @@ from .skin_tool import GLTFSkinTool
 from .gltf_exporter import GLTFExporter
 from .logger import logger, get_logger, set_log_level
 
-# PyTorch-compatible versions
+# ExecuTorch and PyTorch-compatible versions
+try:
+    import executorch
+    from executorch import exir
+    _execu_torch_available = True
+except ImportError:
+    _execu_torch_available = False
+    executorch = None
+    exir = None
+
 try:
     import torch
     _torch_available = True
@@ -44,6 +55,10 @@ __all__ = [
 # Filter out None values
 __all__ = [item for item in __all__ if item is not None]
 
+def is_executorch_available() -> bool:
+    """Check if ExecuTorch is available for edge device acceleration"""
+    return _execu_torch_available
+
 def is_torch_available() -> bool:
     """Check if PyTorch is available for GPU acceleration"""
     return _torch_available
@@ -64,3 +79,12 @@ def get_torch_device(device: str = 'auto') -> 'torch.device':
         return torch.device('cpu')
     else:
         return torch.device(device)
+
+def get_backend_info() -> dict:
+    """Get information about available backends"""
+    return {
+        'execu_torch_available': _execu_torch_available,
+        'torch_available': _torch_available,
+        'execu_torch_version': getattr(executorch, '__version__', 'unknown') if _execu_torch_available else None,
+        'torch_version': getattr(torch, '__version__', 'unknown') if _torch_available else None,
+    }
