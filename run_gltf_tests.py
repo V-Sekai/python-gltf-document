@@ -13,7 +13,7 @@ from pathlib import Path
 
 def run_slash_tests(max_files=None, verbose=False):
     """Run tests using Slash framework"""
-    print("🚀 Running GLTF Compatibility Tests with Slash Framework")
+    print("[START] Running GLTF Compatibility Tests with Slash Framework")
     print("=" * 60)
 
     cmd = ["slash", "run", "slash_gltf_tests.py"]
@@ -32,15 +32,15 @@ def run_slash_tests(max_files=None, verbose=False):
         result = subprocess.run(cmd, env=env, cwd=os.getcwd())
         return result.returncode == 0
     except FileNotFoundError:
-        print("❌ Slash not found. Install with: pip install slash")
+        print("[ERROR] Slash not found. Install with: pip install slash")
         return False
     except Exception as e:
-        print(f"❌ Error running Slash tests: {e}")
+        print(f"[ERROR] Error running Slash tests: {e}")
         return False
 
 def run_comprehensive_tests(max_files=None):
     """Run comprehensive compatibility tests"""
-    print("🧪 Running Comprehensive GLTF Compatibility Tests")
+    print("[TEST] Running Comprehensive GLTF Compatibility Tests")
     print("=" * 60)
 
     cmd = ["python", "comprehensive_compatibility_test.py"]
@@ -52,36 +52,36 @@ def run_comprehensive_tests(max_files=None):
         result = subprocess.run(cmd, cwd=os.getcwd())
         return result.returncode == 0
     except Exception as e:
-        print(f"❌ Error running comprehensive tests: {e}")
+        print(f"[ERROR] Error running comprehensive tests: {e}")
         return False
 
 def run_round_trip_test():
     """Run basic round-trip test"""
-    print("🔄 Running GLTF Round-Trip Test")
+    print("[ROUNDTRIP] Running GLTF Round-Trip Test")
     print("=" * 60)
 
     try:
         result = subprocess.run([sys.executable, "round_trip_test.py"], cwd=os.getcwd())
         return result.returncode == 0
     except Exception as e:
-        print(f"❌ Error running round-trip test: {e}")
+        print(f"[ERROR] Error running round-trip test: {e}")
         return False
 
 def install_dependencies():
     """Install test dependencies"""
-    print("📦 Installing test dependencies...")
+    print("[INSTALL] Installing test dependencies...")
     try:
         result = subprocess.run([
             sys.executable, "-m", "pip", "install", "-r", "requirements-test.txt"
         ], cwd=os.getcwd())
         if result.returncode == 0:
-            print("✅ Dependencies installed successfully")
+            print("[OK] Dependencies installed successfully")
             return True
         else:
-            print("❌ Failed to install dependencies")
+            print("[ERROR] Failed to install dependencies")
             return False
     except Exception as e:
-        print(f"❌ Error installing dependencies: {e}")
+        print(f"[ERROR] Error installing dependencies: {e}")
         return False
 
 def main():
@@ -108,10 +108,10 @@ def main():
         success = run_round_trip_test()
 
     if success:
-        print("\n🎉 All tests completed successfully!")
+        print("\n[SUCCESS] All tests completed successfully!")
         sys.exit(0)
     else:
-        print("\n❌ Some tests failed!")
+        print("\n[ERROR] Some tests failed!")
         sys.exit(1)
 
 if __name__ == "__main__":

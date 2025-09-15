@@ -123,12 +123,12 @@ def demonstrate_skin_expansion():
     success = GLTFSkinTool.expand_skin(nodes, skin)
 
     if success:
-        print("✓ Skin expansion successful!")
+        print("[OK] Skin expansion successful!")
         print(f"Expanded skin joints: {skin.joints}")
         print(f"Expanded skin non_joints: {skin.non_joints}")
         print(f"Skin roots: {skin.roots}")
     else:
-        print("✗ Skin expansion failed!")
+        print("[FAIL] Skin expansion failed!")
 
     print()
 
@@ -147,9 +147,9 @@ def demonstrate_skin_verification():
     is_valid = GLTFSkinTool.verify_skin(nodes, skin)
 
     if is_valid:
-        print("✓ Skin verification passed!")
+        print("[OK] Skin verification passed!")
     else:
-        print("✗ Skin verification failed!")
+        print("[FAIL] Skin verification failed!")
 
     print()
 
@@ -164,7 +164,7 @@ def demonstrate_skeleton_determination():
     success = GLTFSkinTool.determine_skeletons(skins, nodes, skeletons)
 
     if success:
-        print(f"✓ Skeleton determination successful! Created {len(skeletons)} skeletons")
+        print(f"[OK] Skeleton determination successful! Created {len(skeletons)} skeletons")
 
         for i, skeleton in enumerate(skeletons):
             print(f"Skeleton {i}:")
@@ -175,7 +175,7 @@ def demonstrate_skeleton_determination():
             skeleton_data = GLTFSkinTool.create_skeleton_from_gltf(nodes, skeleton)
             print(f"  Bones: {[bone['name'] for bone in skeleton_data['bones']]}")
     else:
-        print("✗ Skeleton determination failed!")
+        print("[FAIL] Skeleton determination failed!")
 
     print()
 
@@ -200,7 +200,7 @@ def demonstrate_full_conversion():
     skeletons = GLTFSkinTool.convert_node_based_to_skeleton(nodes, skins)
 
     if skeletons:
-        print(f"\n✓ Conversion successful! Created {len(skeletons)} skeletons")
+        print(f"\n[OK] Conversion successful! Created {len(skeletons)} skeletons")
 
         for i, skeleton in enumerate(skeletons):
             print(f"\nSkeleton {i}:")
@@ -211,7 +211,7 @@ def demonstrate_full_conversion():
                 parent_info = f" (parent: {skeleton_data['bone_names'][bone['parent']]})" if bone['parent'] >= 0 else ""
                 print(f"    - {bone['name']}{parent_info}")
     else:
-        print("\n✗ Conversion failed!")
+        print("\n[FAIL] Conversion failed!")
 
     print()
 
