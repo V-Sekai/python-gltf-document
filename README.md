@@ -1,5 +1,20 @@
 # Godot GLTF Module - Python Implementation
 
+# ⚠️ **PROJECT STATUS: BROKEN/NOT WORKING** ⚠️
+
+## **IMPORTANT WARNING**
+
+**This project is currently BROKEN and NOT FUNCTIONAL.** Multiple critical components are missing or incomplete:
+
+- ❌ **GLTFExporter class is missing** - Referenced in tests but not implemented
+- ❌ **Several core methods marked as "not implemented yet"**
+- ❌ **Tests will fail** - Dependencies missing, external assets not found
+- ❌ **Import errors expected** - Core functionality incomplete
+
+**Do NOT attempt to use this in production.** This is a development project with significant gaps.
+
+---
+
 A comprehensive Python implementation of Godot's GLTF module, providing GLTF 2.0 file parsing and scene generation capabilities with optional PyTorch acceleration.
 
 ## Features
@@ -14,19 +29,24 @@ A comprehensive Python implementation of Godot's GLTF module, providing GLTF 2.0
 
 ## Installation
 
+### ⚠️ **INSTALLATION WARNING**
+
+**Installation may fail or result in a non-functional setup.** Core components are missing and tests are expected to fail.
+
 ### Requirements
 
 - Python 3.7+
-- PyTorch (optional, for GPU acceleration)
-- Slash (for testing)
+- PyTorch (optional, for GPU acceleration) - **NOT RECOMMENDED**
+- Slash (for testing) - **NOT RECOMMENDED**
 
 ### Basic Installation
 
 ```bash
+# ⚠️ WARNING: This may not work properly
 # Install with basic functionality
 pip install -r requirements.txt
 
-# Install with PyTorch support
+# Install with PyTorch support - EXPECTED TO FAIL
 pip install torch
 pip install -r requirements.txt
 ```
@@ -34,6 +54,7 @@ pip install -r requirements.txt
 ### From Source
 
 ```bash
+# ⚠️ WARNING: This will install a broken package
 git clone <repository-url>
 cd godot-gltf-python
 pip install -e .
@@ -199,28 +220,64 @@ mesh.to(torch.device('cpu'))
 
 ## Testing
 
+### ⚠️ **TESTING WARNING**
+
+**All tests are expected to FAIL.** The test suite references missing components and external dependencies that don't exist.
+
 The module includes comprehensive tests using the Slash testing framework:
 
 ```bash
-# Run all tests
+# ⚠️ WARNING: These commands will FAIL
+# Run all tests - EXPECTED TO FAIL
 slash run
 
-# Run specific test file
+# Run specific test file - EXPECTED TO FAIL
 slash run tests/test_gltf_document.py
 
-# Run with PyTorch tests
+# Run with PyTorch tests - EXPECTED TO FAIL
 slash run tests/test_torch_integration.py
 
-# Run tests with coverage
+# Run tests with coverage - EXPECTED TO FAIL
 slash run --coverage
 ```
 
 ### Test Structure
 
-- **`test_gltf_document.py`**: GLTFDocument functionality
-- **`test_accessor_decoder.py`**: Accessor decoding
-- **`test_torch_integration.py`**: PyTorch integration
-- **`test_scene_generator.py`**: Scene generation
+- **`test_gltf_document.py`**: GLTFDocument functionality - **BROKEN**
+- **`test_accessor_decoder.py`**: Accessor decoding - **BROKEN**
+- **`test_torch_integration.py`**: PyTorch integration - **BROKEN**
+- **`test_scene_generator.py`**: Scene generation - **BROKEN**
+
+## Known Issues
+
+### Critical Missing Components
+
+1. **GLTFExporter Class**
+   - Referenced in `comprehensive_compatibility_test.py`
+   - No implementation exists in the codebase
+   - Export functionality completely missing
+
+2. **Incomplete GLTFDocument Methods**
+   - `generate_buffer()` - Marked as "not implemented yet"
+   - `write_to_filesystem()` - Marked as "not implemented yet"
+   - `append_from_scene()` - Marked as "placeholder"
+
+3. **Missing Dependencies**
+   - Tests expect `thirdparty/glTF-Sample-Assets/Models` directory
+   - External GLTF sample files not included
+   - Slash testing framework may not be installed
+
+4. **Import Errors**
+   - Potential circular imports in module structure
+   - Missing `__init__.py` files in some directories
+   - Torch-related imports may fail if PyTorch not available
+
+### Expected Failures
+
+- All test runners will fail due to missing GLTFExporter
+- Comprehensive compatibility tests will crash on missing assets
+- PyTorch integration tests will fail without proper setup
+- Basic functionality may work but export features are completely broken
 
 ## Examples
 
