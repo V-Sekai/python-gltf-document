@@ -243,7 +243,7 @@ class GLTFCompatibilityTest:
         if not gltf_files:
             return self._generate_report()
 
-        print(f"🔍 Discovered {len(gltf_files)} GLTF files to test")
+        print(f"[SEARCH] Discovered {len(gltf_files)} GLTF files to test")
         print("=" * 80)
 
         tested_count = 0
@@ -251,16 +251,16 @@ class GLTFCompatibilityTest:
             if max_files and tested_count >= max_files:
                 break
 
-            print(f"🧪 Testing: {file_path.name} ({variant})")
+            print(f"[TEST] Testing: {file_path.name} ({variant})")
             result = self.test_single_file(file_path, variant)
             self.results.append(result)
 
             # Show result
             status_emoji = {
-                TestResult.PASS: "✅",
-                TestResult.FAIL: "❌",
-                TestResult.SKIP: "⏭️",
-                TestResult.ERROR: "💥"
+                TestResult.PASS: "[PASS]",
+                TestResult.FAIL: "[FAIL]",
+                TestResult.SKIP: "[SKIP]",
+                TestResult.ERROR: "[CRASH]"
             }[result.overall_result]
 
             print(f"   {status_emoji} {result.overall_result.value}")
@@ -358,36 +358,36 @@ class GLTFCompatibilityTest:
         """Save compatibility report to JSON file"""
         with open(output_file, 'w') as f:
             json.dump(report, f, indent=2)
-        print(f"📄 Report saved to: {output_file}")
+        print(f"[FILE] Report saved to: {output_file}")
 
     def print_summary(self, report: Dict[str, Any]):
         """Print human-readable test summary"""
         summary = report['summary']
 
         print("\n" + "=" * 80)
-        print("🎯 GLTF COMPATIBILITY TEST SUMMARY")
+        print("[TARGET] GLTF COMPATIBILITY TEST SUMMARY")
         print("=" * 80)
 
-        print(f"📊 Total Files Tested: {summary['total_files']}")
-        print(f"✅ Passed: {summary['pass_count']} ({summary['pass_rate']}%)")
-        print(f"❌ Failed: {summary['fail_count']}")
-        print(f"⏭️ Skipped: {summary['skip_count']}")
-        print(f"💥 Errors: {summary['error_count']}")
+        print(f"[STATS] Total Files Tested: {summary['total_files']}")
+        print(f"[PASS] Passed: {summary['pass_count']} ({summary['pass_rate']}%)")
+        print(f"[FAIL] Failed: {summary['fail_count']}")
+        print(f"[SKIP] Skipped: {summary['skip_count']}")
+        print(f"[CRASH] Errors: {summary['error_count']}")
 
-        print(f"\n⏱️ Performance:")
+        print(f"\n[TIMER] Performance:")
         print(f"   Total Time: {summary['total_time']}s")
         print(f"   Avg Load Time: {summary['avg_load_time']}s")
         print(f"   Avg Scene Gen: {summary['avg_scene_time']}s")
         print(f"   Avg Export: {summary['avg_export_time']}s")
 
-        print(f"\n🔧 Feature Support:")
+        print(f"\n[TOOLS] Feature Support:")
         features = report['feature_support']
         for feature, count in features.items():
             percentage = (count / summary['total_files']) * 100 if summary['total_files'] > 0 else 0
             print(f"   {feature.capitalize()}: {count} files ({percentage:.1f}%)")
 
         if report['failed_tests']:
-            print(f"\n❌ Failed Tests ({len(report['failed_tests'])}):")
+            print(f"\n[FAIL] Failed Tests ({len(report['failed_tests'])}):")
             for failed in report['failed_tests'][:10]:  # Show first 10 failures
                 print(f"   • {failed['file_name']} ({failed['variant']})")
             if len(report['failed_tests']) > 10:
@@ -419,13 +419,13 @@ def main():
     # Exit with appropriate code
     pass_rate = report['summary']['pass_rate']
     if pass_rate >= 95.0:
-        print("🎉 Excellent compatibility! Almost all tests passed.")
+        print("[SUCCESS] Excellent compatibility! Almost all tests passed.")
         sys.exit(0)
     elif pass_rate >= 80.0:
-        print("👍 Good compatibility! Most tests passed.")
+        print("[SUCCESS] Good compatibility! Most tests passed.")
         sys.exit(0)
     else:
-        print("⚠️ Compatibility issues detected. Review failed tests.")
+        print("[WARNING] Compatibility issues detected. Review failed tests.")
         sys.exit(1)
 
 

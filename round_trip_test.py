@@ -81,35 +81,35 @@ def test_round_trip():
                 break
 
     if not test_file:
-        print("❌ No GLTF test file found")
+        print("[ERROR] No GLTF test file found")
         return False
 
-    print(f"📁 Testing with: {test_file}")
+    print(f"[DIR] Testing with: {test_file}")
 
     # Step 1: Load GLTF file
-    print("\n1️⃣ Loading GLTF file...")
+    print("\n[1] Loading GLTF file...")
     doc = GLTFDocument()
     state = GLTFState()
 
     result = doc.append_from_file(str(test_file), state)
     if result != 0:
-        print(f"❌ Failed to load GLTF file (error code: {result})")
+        print(f"[ERROR] Failed to load GLTF file (error code: {result})")
         return False
 
-    print("✅ GLTF file loaded successfully")
-    print(f"   📊 Nodes: {len(state.nodes)}, Meshes: {len(state.meshes)}, Materials: {len(state.materials)}")
+    print("[OK] GLTF file loaded successfully")
+    print(f"   [STATS] Nodes: {len(state.nodes)}, Meshes: {len(state.meshes)}, Materials: {len(state.materials)}")
 
     # Step 2: Process the data (generate scene)
-    print("\n2️⃣ Processing GLTF data...")
+    print("\n[2] Processing GLTF data...")
     scene = doc.generate_scene(state)
     if scene is None:
-        print("❌ Failed to generate scene")
+        print("[ERROR] Failed to generate scene")
         return False
 
-    print("✅ Scene generated successfully")
+    print("[OK] Scene generated successfully")
 
     # Step 3: Export back to GLTF
-    print("\n3️⃣ Exporting GLTF file...")
+    print("\n[3] Exporting GLTF file...")
 
     with tempfile.TemporaryDirectory() as temp_dir:
         # Test GLTF export
@@ -118,35 +118,35 @@ def test_round_trip():
         result = exporter.write_to_filesystem(state, str(gltf_output))
 
         if result != 0:
-            print(f"❌ Failed to export GLTF file (error code: {result})")
+            print(f"[ERROR] Failed to export GLTF file (error code: {result})")
             return False
 
-        print("✅ GLTF file exported successfully")
-        print(f"   📁 Output: {gltf_output}")
+        print("[OK] GLTF file exported successfully")
+        print(f"   [DIR] Output: {gltf_output}")
 
         # Step 4: Validate exported GLTF
-        print("\n4️⃣ Validating exported GLTF...")
+        print("\n[4] Validating exported GLTF...")
 
         validator = find_gltf_validator()
         if not validator:
-            print("⚠️  gltf-validator not found, skipping validation")
+            print("[WARNING] gltf-validator not found, skipping validation")
             print("   Install with: npm install -g gltf-validator")
             print("   Or use deno: deno install npm:gltf-validator")
             return True  # Consider this a pass since export worked
 
-        print(f"🔍 Using validator: {validator}")
+        print(f"[SEARCH] Using validator: {validator}")
 
         valid, stdout, stderr = validate_gltf_file(str(gltf_output), validator)
 
         if valid:
-            print("✅ Exported GLTF passes validation!")
+            print("[OK] Exported GLTF passes validation!")
             return True
         else:
-            print("❌ Exported GLTF validation failed!")
+            print("[ERROR] Exported GLTF validation failed!")
             if stdout:
-                print(f"   📄 stdout: {stdout}")
+                print(f"   [FILE] stdout: {stdout}")
             if stderr:
-                print(f"   📄 stderr: {stderr}")
+                print(f"   [FILE] stderr: {stderr}")
             return False
 
     return True
@@ -154,7 +154,7 @@ def test_round_trip():
 
 def test_glb_export():
     """Test GLB export functionality"""
-    print("\n🧪 Testing GLB Export...")
+    print("\n[TEST] Testing GLB Export...")
 
     # Find a test GLTF file
     sample_dir = Path('thirdparty/glTF-Sample-Assets/Models')
@@ -170,7 +170,7 @@ def test_glb_export():
                 break
 
     if not test_file:
-        print("❌ No GLTF test file found for GLB test")
+        print("[ERROR] No GLTF test file found for GLB test")
         return False
 
     # Load and export as GLB
@@ -179,7 +179,7 @@ def test_glb_export():
 
     result = doc.append_from_file(str(test_file), state)
     if result != 0:
-        print("❌ Failed to load GLTF for GLB test")
+        print("[ERROR] Failed to load GLTF for GLB test")
         return False
 
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -188,38 +188,38 @@ def test_glb_export():
         result = exporter.write_to_filesystem(state, str(glb_output))
 
         if result != 0:
-            print(f"❌ Failed to export GLB file (error code: {result})")
+            print(f"[ERROR] Failed to export GLB file (error code: {result})")
             return False
 
-        print("✅ GLB file exported successfully")
-        print(f"   📁 Output: {glb_output}")
+        print("[OK] GLB file exported successfully")
+        print(f"   [DIR] Output: {glb_output}")
 
         # Check file exists and has content
         if glb_output.exists() and glb_output.stat().st_size > 0:
-            print("✅ GLB file has valid size")
+            print("[OK] GLB file has valid size")
             return True
         else:
-            print("❌ GLB file is invalid")
+            print("[ERROR] GLB file is invalid")
             return False
 
 
 if __name__ == "__main__":
-    print("🚀 Starting GLTF Round-Trip Tests\n")
+    print("[START] Starting GLTF Round-Trip Tests\n")
 
     success1 = test_round_trip()
     success2 = test_glb_export()
 
     print("\n" + "=" * 50)
     if success1 and success2:
-        print("🎉 ALL TESTS PASSED!")
-        print("✅ Round-trip GLTF processing works correctly")
-        print("✅ GLTF/GLB export functionality is working")
-        print("✅ Files are ready for gltf-validator testing")
+        print("[SUCCESS] ALL TESTS PASSED!")
+        print("[OK] Round-trip GLTF processing works correctly")
+        print("[OK] GLTF/GLB export functionality is working")
+        print("[OK] Files are ready for gltf-validator testing")
         sys.exit(0)
     else:
-        print("❌ SOME TESTS FAILED")
+        print("[ERROR] SOME TESTS FAILED")
         if not success1:
-            print("❌ Round-trip test failed")
+            print("[ERROR] Round-trip test failed")
         if not success2:
-            print("❌ GLB export test failed")
+            print("[ERROR] GLB export test failed")
         sys.exit(1)

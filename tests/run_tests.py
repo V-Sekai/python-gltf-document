@@ -27,7 +27,7 @@ def run_slash_tests(test_files=None, verbose=False):
             'tests/test_performance.py'
         ]
 
-    print("🧪 Running GLTF Module Test Suite")
+    print("[TEST] Running GLTF Module Test Suite")
     print("=" * 50)
 
     success_count = 0
@@ -36,10 +36,10 @@ def run_slash_tests(test_files=None, verbose=False):
     for test_file in test_files:
         test_path = current_dir / test_file
         if not test_path.exists():
-            print(f"❌ Test file not found: {test_file}")
+            print(f"[ERROR] Test file not found: {test_file}")
             continue
 
-        print(f"\n📋 Running: {test_file}")
+        print(f"\n[RUN] Running: {test_file}")
         print("-" * 30)
 
         # Build slash command
@@ -52,10 +52,10 @@ def run_slash_tests(test_files=None, verbose=False):
             result = subprocess.run(cmd, cwd=current_dir, capture_output=True, text=True, timeout=300)
 
             if result.returncode == 0:
-                print("✅ PASSED")
+                print("[PASS] PASSED")
                 success_count += 1
             else:
-                print("❌ FAILED")
+                print("[FAIL] FAILED")
                 if verbose:
                     print("STDOUT:")
                     print(result.stdout)
@@ -63,18 +63,18 @@ def run_slash_tests(test_files=None, verbose=False):
                     print(result.stderr)
 
         except subprocess.TimeoutExpired:
-            print("⏰ TIMEOUT (5 minutes)")
+            print("[TIMEOUT] TIMEOUT (5 minutes)")
         except Exception as e:
-            print(f"💥 ERROR: {e}")
+            print(f"[CRASH] ERROR: {e}")
 
     print("\n" + "=" * 50)
-    print(f"📊 Test Results: {success_count}/{total_count} test files passed")
+    print(f"[STATS] Test Results: {success_count}/{total_count} test files passed")
 
     if success_count == total_count:
-        print("🎉 All tests passed!")
+        print("[SUCCESS] All tests passed!")
         return 0
     else:
-        print("⚠️ Some tests failed. Check output above for details.")
+        print("[WARNING] Some tests failed. Check output above for details.")
         return 1
 
 

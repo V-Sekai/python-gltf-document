@@ -29,16 +29,16 @@ def test_gltf_loading():
                     try:
                         result = doc.append_from_file(gltf_path, state)
                         if result == 0:
-                            print('✓ GLTF loading successful!')
+                            print('[OK] GLTF loading successful!')
                             print(f'  Nodes: {len(state.nodes)}')
                             print(f'  Meshes: {len(state.meshes)}')
                             print(f'  Materials: {len(state.materials)}')
                             print(f'  Accessors: {len(state.accessors)}')
                             return True
                         else:
-                            print(f'✗ GLTF loading failed with code: {result}')
+                            print(f'[FAIL] GLTF loading failed with code: {result}')
                     except Exception as e:
-                        print(f'✗ Exception during loading: {e}')
+                        print(f'[FAIL] Exception during loading: {e}')
                         import traceback
                         traceback.print_exc()
                     break

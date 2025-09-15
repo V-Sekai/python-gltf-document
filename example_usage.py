@@ -117,7 +117,7 @@ def demonstrate_basic_usage():
     success = doc.load_from_string(json.dumps(gltf_data))
 
     if success:
-        print("✓ GLTF loaded successfully!")
+        print("[OK] GLTF loaded successfully!")
         print(f"  - Nodes: {len(doc.state.nodes)}")
         print(f"  - Meshes: {len(doc.state.meshes)}")
         print(f"  - Accessors: {len(doc.state.accessors)}")
@@ -133,7 +133,7 @@ def demonstrate_basic_usage():
         print(f"  - Indices: {indices}")
 
     else:
-        print("✗ Failed to load GLTF")
+        print("[FAIL] Failed to load GLTF")
 
     print()
 
@@ -143,7 +143,7 @@ def demonstrate_pytorch_usage():
     print("=== PyTorch GLTF Processing Demo ===")
 
     if not is_torch_available():
-        print("✗ PyTorch not available - skipping PyTorch demo")
+        print("[FAIL] PyTorch not available - skipping PyTorch demo")
         return
 
     # Create sample GLTF data
@@ -154,7 +154,7 @@ def demonstrate_pytorch_usage():
     success = doc.load_from_string(json.dumps(gltf_data))
 
     if not success:
-        print("✗ Failed to load GLTF")
+        print("[FAIL] Failed to load GLTF")
         return
 
     # Use PyTorch decoder
@@ -162,7 +162,7 @@ def demonstrate_pytorch_usage():
     from gltf_module import TorchGLTFAccessorDecoder
     torch_decoder = TorchGLTFAccessorDecoder(device=device)
 
-    print(f"✓ Using device: {device}")
+    print(f"[OK] Using device: {device}")
 
     # Decode with PyTorch
     vertex_tensor = torch_decoder.decode_accessor_tensor(doc.state, 0)
@@ -198,7 +198,7 @@ def demonstrate_scene_generation():
     success = doc.load_from_string(json.dumps(gltf_data))
 
     if not success:
-        print("✗ Failed to load GLTF")
+        print("[FAIL] Failed to load GLTF")
         return
 
     # Generate scene
@@ -206,7 +206,7 @@ def demonstrate_scene_generation():
     generator = GLTFSceneGenerator(doc.state)
     scene_nodes = generator.generate_scene()
 
-    print(f"✓ Generated {len(scene_nodes)} root scene nodes")
+    print(f"[OK] Generated {len(scene_nodes)} root scene nodes")
 
     for i, node in enumerate(scene_nodes):
         print(f"  - Node {i}: {node.name}")
