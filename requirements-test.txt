@@ -1,0 +1,8 @@
+# Testing dependencies for GLTF module
+slash>=1.13.0
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Optional: for enhanced reporting
+pytest-html>=3.0.0
+pytest-xdist>=3.0.0
