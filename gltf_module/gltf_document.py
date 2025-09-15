@@ -648,56 +648,84 @@ class GLTFDocument:
     # Helper methods for Godot API compatibility
     def _parse_glb_to_state(self, data: bytes, state: GLTFState) -> bool:
         """Parse GLB data into a specific state object"""
-        # Similar to _parse_glb but uses provided state instead of self.state
         try:
+            self.logger.debug(f"Parsing GLB data, length: {len(data)} bytes")
+
             if len(data) < 12:
+                self.logger.error("GLB file too small for header")
                 return False
 
             magic, version, length = struct.unpack('<III', data[:12])
+            self.logger.debug(f"GLB header: magic=0x{magic:08x}, version={version}, length={length}")
 
             if magic != self.GLTF_MAGIC:
+                self.logger.error(f"Invalid GLB magic number: 0x{magic:08x} (expected 0x{self.GLTF_MAGIC:08x})")
                 return False
 
             if version != 2:
+                self.logger.error(f"Unsupported GLB version: {version} (expected 2)")
+                return False
+
+            if length > len(data):
+                self.logger.error(f"GLB declared length {length} > actual data length {len(data)}")
                 return False
 
             offset = 12
             json_data = None
             bin_data = None
+            chunk_count = 0
 
             while offset < length:
                 if offset + 8 > length:
+                    self.logger.error(f"Chunk header extends beyond file at offset {offset}")
                     return False
 
                 chunk_length, chunk_type = struct.unpack('<II', data[offset:offset+8])
+                self.logger.debug(f"Chunk {chunk_count}: type=0x{chunk_type:08x}, length={chunk_length}")
                 offset += 8
 
                 if offset + chunk_length > length:
+                    self.logger.error(f"Chunk data extends beyond file: offset {offset} + length {chunk_length} > total {length}")
                     return False
 
                 chunk_data = data[offset:offset + chunk_length]
                 offset += chunk_length
 
                 if chunk_type == self.GLTF_JSON_CHUNK_TYPE:
+                    self.logger.debug("Found JSON chunk")
                     json_data = chunk_data.decode('utf-8')
                 elif chunk_type == self.GLTF_BIN_CHUNK_TYPE:
+                    self.logger.debug("Found BIN chunk")
                     bin_data = chunk_data
+                else:
+                    self.logger.warning(f"Unknown chunk type: 0x{chunk_type:08x}")
+
+                chunk_count += 1
 
             if json_data is None:
+                self.logger.error("No JSON chunk found in GLB")
                 return False
 
+            self.logger.debug("Parsing JSON data from GLB")
             success = self._parse_json_to_state(json_data, state)
             if not success:
+                self.logger.error("Failed to parse JSON data from GLB")
                 return False
 
             if bin_data:
+                self.logger.debug(f"Embedding binary data: {len(bin_data)} bytes")
                 if state.buffers:
                     state.buffers[0].data = bin_data
                     state.buffers[0].byte_length = len(bin_data)
+                    self.logger.debug("Binary data embedded in buffer[0]")
+                else:
+                    self.logger.warning("Binary data found but no buffers in GLTF")
 
+            self.logger.debug("GLB parsing completed successfully")
             return True
 
-        except Exception:
+        except Exception as e:
+            self.logger.error(f"Exception during GLB parsing: {e}")
             return False
 
     def _parse_json_to_state(self, json_string: str, state: GLTFState) -> bool:
